@@ -90,9 +90,14 @@ otherExpressions
 
     }
 
+/**
+* A group can either hold another groupList or an expressionList.
+*/
 group
-    = groupBegin expList:expressionList groupEnd {
-        return expList;
+    = groupBegin expList:expressionList? gList:groupList? groupEnd {
+        if(expList){
+            return expList;
+        } else return gList;
     }
 
 /**

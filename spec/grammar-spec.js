@@ -86,4 +86,11 @@ describe("grammar", function(){
             done();
         });
     });
+
+    it("must handle nested groups", function(done){
+        mgoquery.parse("((x=3),(y=5))|(y=4)", function(str){
+            expect(str).toEqual("{'$or': [{'$and': [{'x': '3'}, {'y': '5'}]}, {'y': '4'}]}");
+            done();
+        })
+    })
 });
