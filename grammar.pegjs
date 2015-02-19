@@ -7,8 +7,18 @@
 * Created on: 17.02.2015
 */
 
+
+/**
+* Input strings can either consist of an single expressionList or multiple groups.
+*/
 start
-	= groupList
+	= exp:expressionList? g:groupList? {
+	    if(exp){
+	        return exp;
+	    } else {
+	        return g;
+	    }
+	}
 
 groupBegin = [(]
 groupEnd = [)]
@@ -80,13 +90,18 @@ otherExpressions
 
     }
 
+group
+    = groupBegin expList:expressionList groupEnd {
+        return expList;
+    }
+
 /**
 * Groups make it possible to use multiple combination operators.
 * By defining groups you implicitly define the order in which your operators are handled.
 * Example: (x:1 , y:2) , (z:3)
 */
 groupList
-    = groupBegin? left:expressionList groupEnd? op:andOr? right:otherGroups?{
+    = left:group op:andOr? right:otherGroups?{
         switch(op){
             case "|":
                 return "{'$or': [" + left + ", " + right + "]}";
@@ -101,8 +116,10 @@ groupList
 * Recursively defines how to handle extra groups.
 */
 otherGroups
-    = groupBegin g:expressionList groupEnd op:andOr? other:otherGroups? {
+    = g:group op:andOr? other:otherGroups? {
         if(other){
             return g + ", " + other;
         } else return g;
     }
+
+
