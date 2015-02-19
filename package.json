@@ -1,0 +1,15 @@
+{
+  "name": "mgoquery.js",
+  "version": "0.0.1",
+  "description": "A simple Query language that compiles into a valid MongoDB query.",
+  "main": "parser.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/henning96/mgoqueryjs.git"
+  },
+  "author": "Henning Gerrits",
+  "license": "MIT License (MIT)",
+  "dependencies": {
+    "pegjs": "^0.8.0"
+  }
+}
