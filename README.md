@@ -9,9 +9,9 @@ Expressions consist of a field, an operator and a value. Currently there are thr
 "=" (equals), "<" (less-than) and ">" (higher-than).
 
 Examples:
-x=3 => {'x': '3'}
-foo => 4 => {'foo': {'$gte': '4'}}
-y < x => {'y': {'$lte': 'x'}}
+- x=3 => {'x': '3'}
+- foo => 4 => {'foo': {'$gte': '4'}}
+- y < x => {'y': {'$lte': 'x'}}
 
 Combined expressions
 --------------
