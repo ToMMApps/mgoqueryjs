@@ -5,10 +5,9 @@
   "main": "parser.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/henning96/mgoqueryjs.git"
+    "url": "https://github.com/ToMMApps/mgoqueryjs"
   },
   "author": "Henning Gerrits",
-  "license": "MIT License (MIT)",
   "dependencies": {
     "pegjs": "^0.8.0"
   }
