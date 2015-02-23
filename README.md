@@ -41,7 +41,7 @@ At these examples you can see how much shorter this query language is.
 Combined Groups
 -------------
 
-Similar to expressions you can combine a much amount of expressions as long as you use only one operator.
+Similar to expressions you can combine a much amount of groups as long as you use only one operator.
 Examples:
 - (x=1, x<1) | (y=2) | (z=3) => {'$or': [{'$and': [{'x': '1'}, {'x': {'$lte': '1'}}]}, {'y': '2'}, {'z': '3'}]}
 - (x=1, x<1), (y=2), (z=3) => {'$and': [{'$and': [{'x': '1'}, {'x': {'$lte': '1'}}]}, {'y': '2'}, {'z': '3'}]}
