@@ -2,8 +2,7 @@
 A simple query language that returns a valid MongoDB query.
 It is meant to be much easier to use than MongoDB queries.
 Furthermore it is shorter and more convenient to standard logic notations.
-
-Attention! Please beware of the fact that all whitespaces are ignored. This includes whitespaces inside of apostrophes!
+The parser ignores all whitespaces except for that inside of delimiters.
 
 Expression
 --------------
@@ -57,7 +56,8 @@ It is possible to define lists of groups inside of a group.
 Examples:
 - ((x='3'),(y='5'))|(y='4') becomes {'$or': [{'$and': [{'x': '3'}, {'y': '5'}]}, {'y': '4'}]}
 
-Missing
+Configuration Options
 -------------
+Some options can be overhanded to the constructor:
 
-- Keep whitespaces inside of apostrophes
+- removeAllWhitespaces: Ignores the whitespaces inside of delimiters.

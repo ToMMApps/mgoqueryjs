@@ -99,5 +99,21 @@ describe("grammar", function(){
             expect(str).toEqual("{'$or': [{'$and': [{'x': '3'}, {'y': '5'}]}, {'y': '4'}]}");
             done();
         })
-    })
+    });
+
+    it("must keep whitespaces inside of delimiters", function(done){
+        mgoquery.parse("x = 'test test'", function(str){
+            expect(str).toEqual("{'x': 'test test'}");
+            done();
+        })
+    });
+
+    it("must ignore whitespaces if requested", function(done){
+        var modMgoquery = new Mgoquery({removeAllWhitespaces:true});
+        modMgoquery.parse("x = 'test test'", function(str){
+            expect(str).toEqual("{'x': 'testtest'}");
+            done();
+        })
+    });
+
 });
