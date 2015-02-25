@@ -3,7 +3,6 @@
  * Please use this entry point instead of using the generated parser directly!
  * The whitespaces of the input string must be removed before it can be parsed with the generated file.
  * Author: Henning Gerrits
- * Created on: 17.02.2015
  */
 
 module.exports = function(){
