@@ -34,12 +34,12 @@ module.exports = (function() {
 
         peg$c0 = peg$FAILED,
         peg$c1 = null,
-        peg$c2 = function(exp, g) {
+        peg$c2 = function(g, exp) {
         	    if(exp){
         	        return exp;
-        	    } else {
+        	    } else if(g){
         	        return g;
-        	    }
+        	    } else error("input string contains neither a group nor an expression");
         	},
         peg$c3 = /^[(]/,
         peg$c4 = { type: "class", value: "[(]", description: "[(]" },
@@ -71,34 +71,60 @@ module.exports = (function() {
                     	return "{'" + f + "': {'$gte': '" + v + "'}}";
                     case "^":
                         return "{'" + f + "': {'$regex': '" + v + "'}}";
-                    default:
-                        throw "Unknown error occurred while parsing " + "'" + text() + "'";
         	    }
         	},
         peg$c20 = function(left, op, right) {
-                switch(op){
-                    case "|":
-                        return "{'$or': [" + left + ", " + right + "]}";
-                    case ",":
-                        return "{'$and': [" + left + ", " + right + "]}";
-                    default:
-                        return left;
+                if(op && right){
+                    switch(op){
+                        case "|":
+                            return "{'$or': [" + left + ", " + right + "]}";
+                        case ",":
+                            return "{'$and': [" + left + ", " + right + "]}";
+                    }
+                } else if(op && !right){
+                    error("expression is followed by an operator but there are no further expressions");
+                } else if(!op && right){
+                    error("unknown operator detected");
+                }
+                else{
+                 return left;
                 }
             },
         peg$c21 = function(exp, op, other) {
-                if(other){
+                if(op && other){
                     return exp + ", " + other;
-                } else return exp;
-
+                } else if(op && !other){
+                    error("expression is followed by an operator but there are no further expressions");
+                }
+                else return exp;
             },
         peg$c22 = function(expList, gList) {
                 if(expList){
                     return expList;
                 } else return gList;
             },
-        peg$c23 = function(g, op, other) {
-                if(other){
+        peg$c23 = function(left, op, right) {
+                if(op && right){
+                    switch(op){
+                        case "|":
+                            return "{'$or': [" + left + ", " + right + "]}";
+                        case ",":
+                            return "{'$and': [" + left + ", " + right + "]}";
+                    }
+                } else if(op && !right){
+                    error("group is followed by an operator but there are no further groups");
+                } else if(!op && right){
+                    error("unknown operator detected");
+                }
+                else{
+                 return left;
+                }
+            },
+        peg$c24 = function(g, op, other) {
+                if(op && other){
                     return g + ", " + other;
+                } else if(op && !other){
+                    error("group is followed by an operator but there are no further groups");
                 } else return g;
             },
 
@@ -272,12 +298,12 @@ module.exports = (function() {
       var s0, s1, s2;
 
       s0 = peg$currPos;
-      s1 = peg$parseexpressionList();
+      s1 = peg$parsegroupList();
       if (s1 === peg$FAILED) {
         s1 = peg$c1;
       }
       if (s1 !== peg$FAILED) {
-        s2 = peg$parsegroupList();
+        s2 = peg$parseexpressionList();
         if (s2 === peg$FAILED) {
           s2 = peg$c1;
         }
@@ -617,7 +643,7 @@ module.exports = (function() {
           }
           if (s3 !== peg$FAILED) {
             peg$reportedPos = s0;
-            s1 = peg$c20(s1, s2, s3);
+            s1 = peg$c23(s1, s2, s3);
             s0 = s1;
           } else {
             peg$currPos = s0;
@@ -652,7 +678,7 @@ module.exports = (function() {
           }
           if (s3 !== peg$FAILED) {
             peg$reportedPos = s0;
-            s1 = peg$c23(s1, s2, s3);
+            s1 = peg$c24(s1, s2, s3);
             s0 = s1;
           } else {
             peg$currPos = s0;

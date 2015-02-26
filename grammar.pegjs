@@ -10,12 +10,12 @@
 * Input strings can either consist of an single expressionList or multiple groups.
 */
 start
-	= exp:expressionList? g:groupList? {
+	=  g:groupList? exp:expressionList?{
 	    if(exp){
 	        return exp;
-	    } else {
+	    } else if(g){
 	        return g;
-	    }
+	    } else error("input string contains neither a group nor an expression");
 	}
 
 groupBegin = [(]
@@ -59,8 +59,6 @@ expression
             	return "{'" + f + "': {'$gte': '" + v + "'}}";
             case "^":
                 return "{'" + f + "': {'$regex': '" + v + "'}}";
-            default:
-                throw "Unknown error occurred while parsing " + "'" + text() + "'";
 	    }
 	}
 
@@ -71,23 +69,32 @@ expression
 */
 expressionList
     = left:expression op:andOr ? right:otherExpressions ?{
-        switch(op){
-            case "|":
-                return "{'$or': [" + left + ", " + right + "]}";
-            case ",":
-                return "{'$and': [" + left + ", " + right + "]}";
-            default:
-                return left;
+        if(op && right){
+            switch(op){
+                case "|":
+                    return "{'$or': [" + left + ", " + right + "]}";
+                case ",":
+                    return "{'$and': [" + left + ", " + right + "]}";
+            }
+        } else if(op && !right){
+            error("expression is followed by an operator but there are no further expressions");
+        } else if(!op && right){
+            error("unknown operator detected");
+        }
+        else{
+         return left;
         }
     }
 
 // Recursively defines how to handle additional expressions.
 otherExpressions
     = exp:expression op:andOr ? other:otherExpressions ? {
-        if(other){
+        if(op && other){
             return exp + ", " + other;
-        } else return exp;
-
+        } else if(op && !other){
+            error("expression is followed by an operator but there are no further expressions");
+        }
+        else return exp;
     }
 
 // A group can either hold another groupList or an expressionList.
@@ -104,21 +111,30 @@ group
 */
 groupList
     = left:group op:andOr? right:otherGroups?{
-        switch(op){
-            case "|":
-                return "{'$or': [" + left + ", " + right + "]}";
-            case ",":
-                return "{'$and': [" + left + ", " + right + "]}";
-            default:
-                return left;
+        if(op && right){
+            switch(op){
+                case "|":
+                    return "{'$or': [" + left + ", " + right + "]}";
+                case ",":
+                    return "{'$and': [" + left + ", " + right + "]}";
+            }
+        } else if(op && !right){
+            error("group is followed by an operator but there are no further groups");
+        } else if(!op && right){
+            error("unknown operator detected");
+        }
+        else{
+         return left;
         }
     }
 
 // Recursively defines how to handle additional groups.
 otherGroups
     = g:group op:andOr? other:otherGroups? {
-        if(other){
+        if(op && other){
             return g + ", " + other;
+        } else if(op && !other){
+            error("group is followed by an operator but there are no further groups");
         } else return g;
     }
 
