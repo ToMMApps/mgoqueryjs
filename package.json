@@ -1,5 +1,5 @@
 {
-  "name": "mgoquery.js",
+  "name": "mgoqueryjs",
   "version": "0.1.0",
   "description": "A simple Query language that compiles into a valid MongoDB query.",
   "main": "parser.js",
