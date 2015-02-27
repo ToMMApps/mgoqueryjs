@@ -4,6 +4,23 @@ It is meant to be much easier to use than MongoDB queries.
 Furthermore it is shorter and more convenient to standard logic notations.
 The parser ignores all whitespaces except for that inside of delimiters.
 
+Installation
+--------------
+npm install --save mgoqueryjs
+
+Usage
+--------------
+```
+var Mgoquery = require('mgoqueryjs');
+var mgoquery = new Mgoquery();
+
+mgoquery.parse("x='3'", function(str)){
+    console.log(str)
+});
+```
+
+This should output: {'x': '3'}
+
 Expression
 --------------
 Expressions consist of a field, an operator and a value. Currently there are four types of operators available:
