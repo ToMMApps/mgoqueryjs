@@ -78,3 +78,13 @@ Configuration Options
 Some options can be overhanded to the constructor:
 
 - removeAllWhitespaces: Ignores the whitespaces inside of delimiters.
+
+Code-Quality
+----------
+
+Current Jenkins report for this project:
+- ![BuildStatus](http://jenkins.tomm-apps.de/buildStatus/icon?job=tommapps_mgoqueryjs)
+- ![Test](http://jenkins.tomm-apps.de:3434/badge/tommapps_mgoqueryjs/test)
+- ![LastBuild](http://jenkins.tomm-apps.de:3434/badge/tommapps_mgoqueryjs/lastbuild)
+- ![CodeCoverageInJenkins](http://jenkins.tomm-apps.de:3434/badge/tommapps_mgoqueryjs/coverage)
+
