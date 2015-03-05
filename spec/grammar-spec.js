@@ -131,34 +131,27 @@ describe("grammar", function(){
     });
 
     it("must throw an exception if the input string is empty", function(done){
-        try{
-            mgoquery.parse("");
-        } catch (Exception){
-            done();
-        }
+        expect(function(){
+            mgoquery.parse("")
+        }).toThrow();
+        done();
     });
 
     it("must throw an exception if the value is not surrounded by delimiters", function(done){
-        try{
-            mgoquery.parse("fieldStr = valueStr");
-        } catch (Exception){
-            done();
-        }
+        expect(function(){
+            mgoquery.parse("fieldStr = valueStr")
+        }).toThrow();
+        done();
     });
 
     it("must throw an exception if field contains invalid symbols", function(done){
         var invalidSymbols = ",|<>=^";
-        var counter = 0;
 
-        for(var i = 0; i < invalidSymbols.length; i++){
-            try{
-                mgoquery.parse(invalidSymbols[i] + " = 'value'");
-            } catch (Exception){
-                counter++;
-            }
+        for(var i in invalidSymbols){
+            expect(function(){
+                mgoquery.parse(invalidSymbols[i] + " = 'value'")
+            }).toThrow();
         }
-
-        expect(counter).toEqual(invalidSymbols.length);
         done();
     });
 
@@ -171,67 +164,59 @@ describe("grammar", function(){
     });
 
     it("must throw an exception if value is empty", function(done){
-        try{
-            mgoquery.parse("field = ''");
-        } catch (Exception){
-            done();
-        }
+        expect(function(){
+            mgoquery.parse("field = ''")
+        }).toThrow();
+        done();
     });
 
     it("must throw an exception if the expression combination operator is unknown", function(done){
-        try{
-            mgoquery.parse("field = 'value' ? field = 'value'");
-        } catch (Exception){
-            done();
-        }
+        expect(function(){
+            mgoquery.parse("field = 'value' ? field = 'value'")
+        }).toThrow();
+        done();
     });
 
     it("must throw an exception if the group combination operator is unknown", function(done){
-        try{
-            mgoquery.parse("(field = 'value') ? (field = 'value')");
-        } catch (Exception){
-            done();
-        }
+        expect(function(){
+            mgoquery.parse("(field = 'value') ? (field = 'value')")
+        }).toThrow();
+        done();
     });
 
     it("must throw an exception if a group is not closed", function(done){
-        try{
-            mgoquery.parse("(field='value'");
-        } catch (Exception){
-            done();
-        }
+        expect(function(){
+            mgoquery.parse("(field='value'")
+        }).toThrow();
+        done();
     });
 
     it("must throw an exception if the user attempts to combine a group with an expression", function(done){
-        try{
-            mgoquery.parse("(x='3'), x='3'");
-        } catch (Exception){
-            done();
-        }
+        expect(function(){
+            mgoquery.parse("(x='3'), x='3'")
+        }).toThrow();
+        done();
     });
 
     it("must throw an exception if the user attempts to combine an expression with a group", function(done){
-        try{
-            mgoquery.parse("x='3', (x='3')");
-        } catch (Exception){
-            done();
-        }
+        expect(function(){
+            mgoquery.parse("x='3', (x='3')")
+        }).toThrow();
+        done();
     });
 
     it("must throw an exception if the user attempts to combine a list of groups with an expression", function(done){
-        try{
-            mgoquery.parse("(x='3'), (y='3'), x='3'");
-        } catch (Exception){
-            done();
-        }
+        expect(function(){
+            mgoquery.parse("(x='3'), (y='3'), x='3'")
+        }).toThrow();
+        done();
     });
 
     it("must throw an exception if the user attempts to combine a list of expressions with a group", function(done){
-        try{
-            mgoquery.parse("x='3', y='3', (x='3')");
-        } catch (Exception){
-            done();
-        }
+        expect(function(){
+            mgoquery.parse("x='3', y='3', (x='3')")
+        }).toThrow();
+        done();
     });
 
 });
