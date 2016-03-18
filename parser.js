@@ -5,9 +5,12 @@
  * Author: Henning Gerrits
  */
 
+var Q = require('q');
+
 module.exports = function(config){
     var _parser = require("./grammar");
     var _DELIMITER = "'";
+    var _self = this;
 
     /**
      * Returns the given string without any whitespaces.
@@ -39,6 +42,8 @@ module.exports = function(config){
 
     /**
      * Parses the input string und calls the overhanded function with the resulting string.
+     * This function works synchronous!
+     * Runtime errors are not caught. They have to be caught manually. Use parseSync for a error-first-style (node-style) function that works synchronous.
      */
     this.parse = function(str, cb){
         var trimmed;
@@ -51,5 +56,31 @@ module.exports = function(config){
 
         var parsedStr = _parser.parse(trimmed);
         if(cb){cb(parsedStr);}
+    };
+
+    /**
+     * Does the same as parse, but is directly returning the result.
+     */
+    this.parseSync = function (str) {
+
+        var trimmed;
+
+        if(config && config.removeAllWhitespaces){
+            trimmed = _removeWhitespaces(str);
+        } else{
+            trimmed = _removeWhitespacesExceptForDelimiter(str);
+        }
+
+        return _parser.parse(trimmed);
+    };
+
+    /**
+     * Calls its callback asynchronous. This functions realizes a dual promise/callback API.
+     * It supports both the callback- and the promise-pattern.
+     */
+    this.parseAsync = function (str, cb) {
+        return Q.Promise(function (resolve) {
+            resolve(_self.parseSync(str));
+        }).nodeify(cb);
     };
 };

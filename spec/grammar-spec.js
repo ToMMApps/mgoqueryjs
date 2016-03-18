@@ -3,25 +3,87 @@ var Mgoquery = require('./../parser');
 var mgoquery = new Mgoquery();
 
 describe("grammar", function(){
-    it("must handle equals expressions", function(done){
+    it("must handle equals expressions with strings", function(done){
         mgoquery.parse("x='3'", function(str){
             expect(str).toEqual("{'x': '3'}");
             done();
         });
     });
 
-    it("must handle greater-than (>) expressions", function(done){
+    it("must handle equals expressions with integers", function(done){
+        mgoquery.parse("x=3", function(str){
+            expect(str).toEqual("{'x': 3}");
+            done();
+        });
+    });
+
+    it("must handle equals expressions with integers with more than one digit ", function(done){
+        mgoquery.parse("x=3748569", function(str){
+            expect(str).toEqual("{'x': 3748569}");
+            done();
+        });
+    });
+
+    it("must handle equals expressions with boolean true", function(done){
+        mgoquery.parse("x=true", function(str){
+            expect(str).toEqual("{'x': true}");
+            done();
+        });
+    });
+
+    it("must handle equals expressions with boolean false", function(done){
+        mgoquery.parse("x=false", function(str){
+            expect(str).toEqual("{'x': false}");
+            done();
+        });
+    });
+
+    it("must throw an exception if boolean false is used with a non-equals operator", function(){
+        expect(function () {
+            mgoquery.parseSync("x>false");
+        }).toThrow();
+    });
+
+    it("must throw an exception if boolean true is used with a non-equals operator", function(){
+        expect(function () {
+            mgoquery.parseSync("x>true");
+        }).toThrow();
+    });
+
+    it("must handle greater-than (>) expressions with strings", function(done){
         mgoquery.parse("foo > '4'", function(str){
             expect(str).toEqual("{'foo': {'$gte': '4'}}");
             done();
         });
     });
 
-    it("must handle less-than expressions", function(done){
+    it("must handle less-than (<) expressions with strings", function(done){
         mgoquery.parse("y < 'x'", function(str){
             expect(str).toEqual("{'y': {'$lte': 'x'}}");
             done();
         });
+    });
+
+    it("must handle greater-than (>) expressions with integers", function(done){
+        mgoquery.parse("foo > 4", function(str){
+            expect(str).toEqual("{'foo': {'$gte': 4}}");
+            done();
+        });
+    });
+
+    it("must handle less-than (<) expressions with integers", function(done){
+        mgoquery.parse("y < 6", function(str){
+            expect(str).toEqual("{'y': {'$lte': 6}}");
+            done();
+        });
+    });
+
+    it("must throw an exception if integers are used with the regex operator", function(done){
+        expect(function () {
+            mgoquery.parse("y ^ 2");
+        }).toThrow();
+
+        done();
     });
 
     it("must handle regular expressions", function(done){
@@ -48,6 +110,13 @@ describe("grammar", function(){
     it("must handle or-combined expressions", function(done){
         mgoquery.parse("x='1' | y='2'", function(str){
             expect(str).toEqual("{'$or': [{'x': '1'}, {'y': '2'}]}");
+            done();
+        });
+    });
+
+    it("must handle mixed expressions", function(done){
+        mgoquery.parse("x=1 | y='2'", function(str){
+            expect(str).toEqual("{'$or': [{'x': 1}, {'y': '2'}]}");
             done();
         });
     });

@@ -1,15 +1,22 @@
 {
   "name": "mgoqueryjs",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "A simple Query language that compiles into a valid MongoDB query.",
   "main": "parser.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/ToMMApps/mgoqueryjs"
   },
+  "scripts": {
+    "test": "jasmine-node spec/",
+    "build": "pegjs grammer.pegjs"
+  },
   "author": "Henning Gerrits",
   "devDependencies": {
     "jasmine-node": ">= 1.14.5",
     "pegjs": "^0.8.0"
+  },
+  "dependencies": {
+    "q": "^1.4.1"
   }
 }

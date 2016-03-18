@@ -44,22 +44,57 @@ valueStr
       	    } else return left;
       	}
 
-value = delimiter str:valueStr delimiter {return str;}
+integerValue = digits:[0-9]+ { return parseInt(digits.join(""), 10); }
 
+stringValue = delimiter str:valueStr delimiter {return str;}
+
+booleanTrueValue = "true"
+
+booleanFalseValue = "false"
 
 // An expression must always contain a field/key, an operator and an associated value.
 expression
-	= f:field op:operator v:value {
-	    switch(op){
-	        case "=":
-	            return "{'" + f + "'" + ": " + "'" + v + "'}";
-	        case "<":
-	            return "{'" + f + "': {'$lte': '" + v + "'}}";
-	        case ">":
-            	return "{'" + f + "': {'$gte': '" + v + "'}}";
-            case "^":
-                return "{'" + f + "': {'$regex': '" + v + "'}}";
-	    }
+	= f:field op:operator sv:stringValue? iv:integerValue? btv:booleanTrueValue? bfv:booleanFalseValue?{
+	    if(sv) {
+            switch(op){
+                case "=":
+                    return "{'" + f + "'" + ": " + "'" + sv + "'}";
+                case "<":
+                    return "{'" + f + "': {'$lte': '" + sv + "'}}";
+                case ">":
+                    return "{'" + f + "': {'$gte': '" + sv + "'}}";
+                case "^":
+                    return "{'" + f + "': {'$regex': '" + sv + "'}}";
+            }
+	    } else if(iv) {
+            switch(op){
+                case "=":
+                    return "{'" + f + "'" + ": " + iv + "}";
+                case "<":
+                    return "{'" + f + "': {'$lte': " + iv + "}}";
+                case ">":
+                    return "{'" + f + "': {'$gte': " + iv + "}}";
+                case "^":
+                    error("regular expressions are not supported on integers");
+            }
+	    } else if(btv) {
+                switch(op){
+                    case "=":
+                        return "{'" + f + "'" + ": " + btv + "}";
+                    default: {
+                        error("boolean expressions do only support the equals operator");
+                    }
+                }
+	    } else if(bfv) {
+                switch(op){
+                    case "=":
+                        return "{'" + f + "'" + ": " + bfv + "}";
+                     default: {
+                         error("boolean expressions do only support the equals operator");
+                     }
+                }
+        }
+
 	}
 
 /**

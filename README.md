@@ -14,12 +14,38 @@ Usage
 var Mgoquery = require('mgoqueryjs');
 var mgoquery = new Mgoquery();
 
-mgoquery.parse("x='3'", function(str)){
-    console.log(str)
-});
+console.log(mgoquery.parseSync("x='3'"));
 ```
 
 This should output: {'x': '3'}
+
+Or use the asynchronous version that supports both the callback (error-first-style)- and the promise-pattern:
+
+```
+mgoquery.parseAsync("x='3'").then(function(str){
+    console.log(str);
+})
+
+mgoquery.parseAsync("x='3'", function(err, str){
+    console.log(str);
+})
+```
+
+### Changes in 0.2.0 ###
+The parse function is still supported but it is recommended to switch to the new parseSync/parseAsync functions
+to avoid confusing behavior like:
+
+```
+var i = 0;
+
+mgoquery.parse("x='3'", function(str){
+    i++;
+});
+
+console.log(i); //output: 1
+```
+
+In this case the parse function seems to work asynchronous but has synchronous behavior.
 
 Expression
 --------------
@@ -31,6 +57,15 @@ Examples:
 - foo > '4' becomes {'foo': {'$gte': '4'}}
 - y < 'x' becomes {'y': {'$lte': 'x'}}
 - y ^ '^-?\\d{1,19}$' becomes {'y': {'$regex': '^-?\\d{1,19}$'}}
+
+### Changes in 0.2.0 ###
+Expressions do now support integers and boolean values. For example:
+
+- x=2 => {'x': 2}
+- x>2 =>  {'x': {'$gte': 2}}
+- x='2' => {'x': '2'}
+- x=true => {'x': true}
+- x=false => {'x': false}
 
 Combined expressions
 --------------
@@ -87,4 +122,3 @@ Current Jenkins report for this project:
 - ![Test](http://jenkins.tomm-apps.de:3434/badge/tommapps_mgoqueryjs/test)
 - ![LastBuild](http://jenkins.tomm-apps.de:3434/badge/tommapps_mgoqueryjs/lastbuild)
 - ![CodeCoverageInJenkins](http://jenkins.tomm-apps.de:3434/badge/tommapps_mgoqueryjs/coverage)
-
