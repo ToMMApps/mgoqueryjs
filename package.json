@@ -3,6 +3,7 @@
   "version": "0.2.0",
   "description": "A simple Query language that compiles into a valid MongoDB query.",
   "main": "parser.js",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/ToMMApps/mgoqueryjs"
